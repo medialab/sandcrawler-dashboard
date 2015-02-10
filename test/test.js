@@ -13,19 +13,14 @@ var express = require('express'),
 var app = express();
 app.use('/', express.static(__dirname));
 
-// Helpers
-function randomInt(x, y) {
-  return Math.floor(Math.random() * y) + x;
-}
-
 // Spider
-var spider = sandcrawler.spider()
+var spider = sandcrawler.spider('MySpider')
   .use(dashboard())
   .beforeScraping(function(req, next) {
-    setTimeout(next, randomInt(1, 2) * 1000);
+    setTimeout(next, Math.random() * 1000);
   })
-  .urls(_.range(10 - 1).map(function() {
-    return 'http://localhost:1337/basic.html';
+  .urls(_.range(50 - 1).map(function(i) {
+    return 'http://localhost:1337/basic.html?' + (i + 1);
   }))
   .scraper(function($, done) {
     return done(null, {hello: 'world'});

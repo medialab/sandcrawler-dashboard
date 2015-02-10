@@ -5,7 +5,8 @@
  * Displays a handy dashboard for the spider using it.
  */
 var blessed = require('blessed'),
-    contrib = require('blessed-contrib');
+    contrib = require('blessed-contrib'),
+    logger = require('sandcrawler-logger');
 
 module.exports = function(opts) {
 
@@ -53,5 +54,7 @@ module.exports = function(opts) {
 
     // Retrieving components
     var rollingLog = leftGrid.get(0, 0);
+
+    spider.use(logger({out: function(txt) {rollingLog.log(txt);}}));
   };
 };

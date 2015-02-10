@@ -32,11 +32,12 @@
   "homepage": "https://github.com/medialab/sandcrawler-dashboard",
   "dependencies": {
     "blessed": "0.0.44",
-    "blessed-contrib": "0.0.8"
+    "blessed-contrib": "0.0.8",
+    "sandcrawler-logger": "git+https://github.com/Yomguithereal/sandcrawler-logger.git"
   },
   "devDependencies": {
     "express": "^4.11.2",
     "lodash": "^3.1.0",
-    "sandcrawler": "file:../../../../var/folders/5y/846238q10k52g3ncfkpcp1xc0000gn/T/npm-1744-9d2c12a1/git-cache-36f40fbf9368/3f5d29163d38ff3f4ee3c10929956bb500c8e9b9"
+    "sandcrawler": "git+https://github.com/medialab/sandcrawler.git"
   }
 }
