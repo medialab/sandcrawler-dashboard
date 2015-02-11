@@ -92,7 +92,7 @@ module.exports = function(opts) {
     screen.render();
 
     // Getting out of the dashboard (might get useful...)
-    screen.key(['q', 'C-c'], function(ch, key) {
+    screen.key(['C-c'], function(ch, key) {
       return process.exit(0);
     });
 
@@ -110,10 +110,23 @@ module.exports = function(opts) {
       }
     }));
 
+    // On end
+    spider.once('spider:end', function() {
+      setTimeout(function() {
+        spider.logger.info('Press Ctrl-c to exit...');
+      }, 10);
+    });
+
     // Sample data display
     spider.on('job:success', function(job) {
 
       dataSampleComponent.setContent(util.inspect(job.res.data, {depth: 1}));
+      screen.render();
+    });
+
+    // Progress bar
+    spider.on('job:success', function() {
+      progressBarComponent.progress(10);
       screen.render();
     });
   };
