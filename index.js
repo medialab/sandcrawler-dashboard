@@ -125,8 +125,11 @@ module.exports = function(opts) {
     });
 
     // Progress bar
-    spider.on('job:success', function() {
-      progressBarComponent.progress(10);
+    spider.on('job:end', function() {
+      var completion = spider.stats.completion;
+
+      progressBarComponent.setProgress(completion);
+      progressBarComponent.setLabel('Progress - ' + completion + '%');
       screen.render();
     });
   };
