@@ -31,8 +31,7 @@
   },
   "homepage": "https://github.com/medialab/sandcrawler-dashboard",
   "dependencies": {
-    "blessed": "0.0.44",
-    "blessed-contrib": "0.0.8",
+    "blessed": "git+https://github.com/chjj/blessed.git",
     "sandcrawler-logger": "git+https://github.com/Yomguithereal/sandcrawler-logger.git"
   },
   "devDependencies": {

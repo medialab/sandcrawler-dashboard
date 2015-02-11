@@ -19,15 +19,18 @@ var spider = sandcrawler.spider('MySpider')
   .beforeScraping(function(req, next) {
     setTimeout(next, Math.random() * 1000);
   })
-  .urls(_.range(50 - 1).map(function(i) {
-    return 'http://localhost:1337/basic.html?' + (i + 1);
+  .urls(_.range(30).map(function(i) {
+    return 'http://localhost:3002/basic.html?' + (i + 1);
   }))
   .scraper(function($, done) {
-    return done(null, {hello: 'world'});
+    if (Math.random() > 0.5)
+      return done(null, {hello: 'world'});
+    else
+      return done(null, $('.url-list a').scrape('href'));
   });
 
 // Listening
-var server = app.listen(1337);
+var server = app.listen(3002);
 
 sandcrawler.run(spider, function(err) {
   server.close();

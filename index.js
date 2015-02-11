@@ -4,8 +4,8 @@
  *
  * Displays a handy dashboard for the spider using it.
  */
-var blessed = require('blessed'),
-    contrib = require('blessed-contrib'),
+var util = require('util'),
+    blessed = require('blessed'),
     logger = require('sandcrawler-logger');
 
 module.exports = function(opts) {
@@ -13,48 +13,108 @@ module.exports = function(opts) {
   return function(spider) {
 
     // Building the UI
-    var screen = blessed.screen(),
-        grid = new contrib.grid({rows: 1, cols: 2}),
-        leftGrid = new contrib.grid({rows: 2, cols: 1}),
-        rightGrid = new contrib.grid({rows: 3, cols: 1});
-
-    grid.set(0, 0, leftGrid);
-    grid.set(0, 1, rightGrid);
+    var screen = blessed.screen();
 
     // Log component
-    leftGrid.set(0, 0, contrib.log, {
-      label: 'Log'
+    var logComponent = blessed.list({
+      label: 'Log',
+      top: '0',
+      left: '0',
+      border: {
+        type: 'line',
+        fg: 'cyan'
+      },
+      width: '60%',
+      height: '70%',
+      interactive: false
+    });
+    logComponent.logLines = [];
+
+    // Data sample component
+    var dataSampleComponent = blessed.box({
+      label: 'Data Sample',
+      top: '70%',
+      left: '0',
+      border: {
+        type: 'line',
+        fg: 'cyan'
+      },
+      width: '60%',
+      height: '30%'
     });
 
-    // TODO...
-    leftGrid.set(1, 0, blessed.Element, {
-      label: 'Sample Data'
+    // Job table component
+    var jobTableComponent = blessed.box({
+      label: 'Jobs',
+      top: '0',
+      left: '60%',
+      border: {
+        type: 'line',
+        fg: 'cyan'
+      },
+      width: '40%',
+      height: '40%'
     });
 
-    rightGrid.set(0, 0, contrib.table, {
-      label: 'Jobs'
+    // Gauge component
+    var progressBarComponent = blessed.ProgressBar({
+      label: 'Progress - 0%',
+      top: '40%',
+      left: '60%',
+      border: {
+        type: 'line',
+        fg: 'cyan'
+      },
+      width: '40%',
+      height: '10%',
+      barBg: 'blue'
     });
 
-    rightGrid.set(1, 0, contrib.log, {
-      label: 'Spider Progress'
-    });
-
-    rightGrid.set(2, 0, blessed.Element, {
-      label: 'Stats'
+    // Stats component
+    var statsComponent = blessed.box({
+      label: 'Stats',
+      top: '50%',
+      left: '60%',
+      border: {
+        type: 'line',
+        fg: 'cyan'
+      },
+      width: '40%',
+      height: '50%'
     });
 
     // Rendering the UI
-    grid.applyLayout(screen);
+    screen.append(logComponent);
+    screen.append(dataSampleComponent);
+    screen.append(jobTableComponent);
+    screen.append(progressBarComponent);
+    screen.append(statsComponent);
     screen.render();
 
     // Getting out of the dashboard (might get useful...)
-    screen.key(['escape', 'q', 'C-c'], function(ch, key) {
+    screen.key(['q', 'C-c'], function(ch, key) {
       return process.exit(0);
     });
 
-    // Retrieving components
-    var rollingLog = leftGrid.get(0, 0);
+    // Branching the logger
+    spider.use(logger({
+      out: function(txt) {
+        var lines = logComponent.logLines;
+        lines.push(txt);
 
-    spider.use(logger({out: function(txt) {rollingLog.log(txt);}}));
+        if (lines.length > logComponent.height - 2)
+          lines.shift();
+
+        logComponent.setItems(lines);
+        screen.render();
+      }
+    }));
+
+    // Sample data display
+    spider.on('job:success', function(job) {
+
+      dataSampleComponent.setContent(util.inspect(job.res.data, {depth: 1}));
+      screen.render();
+    });
   };
 };
