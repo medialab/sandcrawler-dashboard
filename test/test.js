@@ -23,9 +23,9 @@ var spider = sandcrawler.spider('MySpider')
   .use(dashboard())
   .config({concurrency: 4})
   .beforeScraping(function(req, next) {
-    setTimeout(next, randInt(2, 4) * 500);
+    setTimeout(next, randInt(2, 10) * 500);
   })
-  .urls(_.range(40).map(function(i) {
+  .urls(_.range(100).map(function(i) {
     return 'http://localhost:3002/basic.html?' + (i + 1);
   }))
   .scraper(function($, done) {

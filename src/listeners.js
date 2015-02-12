@@ -7,9 +7,32 @@
 var logger = require('sandcrawler-logger'),
     chalk = require('chalk'),
     util = require('util'),
-    moment = require('moment'),
     _ = require('lodash');
 
+// Helpers
+function pad(nb) {
+  var nbstr = '' + nb;
+
+  if (nbstr.length < 2)
+    return '0' + nb;
+  return nbstr;
+}
+
+function formatHMS(seconds) {
+  var hours = (seconds / 3600) | 0,
+      minutes = (seconds / 60) | 0,
+      seconds = seconds % 60;
+
+  return pad(hours) + ':' + pad(minutes) + ':' + pad(seconds);
+}
+
+function formatMS(seconds) {
+  var minutes = (seconds / 60) | 0,
+      seconds = seconds % 60;
+  return pad(minutes) + ':' + pad(seconds);
+}
+
+// Exporting listeners
 module.exports = function(spider, ui) {
 
   function render() {
@@ -35,9 +58,9 @@ module.exports = function(spider, ui) {
     ].join('\n'));
 
     ui.info.setContent([
-      chalk.grey.bold('Elapsed time      ') + moment({seconds: spider.stats.getElapsedTime()}).format('H:mm:ss'),
-      chalk.grey.bold('Remaining time    ') + moment({seconds: spider.stats.getEstimatedTimeToCompletion()}).format('H:mm:ss'),
-      chalk.grey.bold('Time per job      ') + moment({seconds: spider.stats.averageTimePerJob}).format('  mm:ss'),
+      chalk.grey.bold('Elapsed time      ') + formatHMS(spider.stats.getElapsedTime()),
+      chalk.grey.bold('Remaining time    ') + formatHMS(spider.stats.getRemainingTimeEstimation()),
+      chalk.grey.bold('Time per job      ') + '   ' + formatMS(spider.stats.averageTimePerJob),
       '',
       chalk.grey.bold('Engine type       ') + spider.type,
       chalk.grey.bold('Most common error ') + (mostCommonError ? chalk.red(mostCommonError) : '-')
