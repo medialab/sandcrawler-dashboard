@@ -7,12 +7,41 @@
 var logger = require('sandcrawler-logger'),
     chalk = require('chalk'),
     util = require('util'),
+    moment = require('moment'),
     _ = require('lodash');
 
 module.exports = function(spider, ui) {
 
   function render() {
+    updateInformation();
     return ui.screen.render();
+  }
+
+  function updateInformation() {
+    var mostCommonError = _(spider.stats.errorIndex)
+      .pairs()
+      .max(function(p) {
+        return p[1];
+      })[0];
+
+    ui.stats.setContent([
+      chalk.grey.bold('Queued jobs      ') + spider.stats.queued,
+      chalk.grey.bold('In-progress jobs ') + spider.stats.doing,
+      chalk.grey.bold('Done jobs        ') + spider.stats.done,
+      '',
+      chalk.grey.bold('Successes        ') + spider.stats.successes,
+      chalk.grey.bold('Failures         ') + spider.stats.failures,
+      chalk.grey.bold('Success Rate     ') + spider.stats.successRate + '%',
+    ].join('\n'));
+
+    ui.info.setContent([
+      chalk.grey.bold('Elapsed time      ') + moment({seconds: spider.stats.getElapsedTime()}).format('H:mm:ss'),
+      chalk.grey.bold('Remaining time    ') + moment({seconds: spider.stats.getEstimatedTimeToCompletion()}).format('H:mm:ss'),
+      chalk.grey.bold('Time per job      ') + moment({seconds: spider.stats.averageTimePerJob}).format('  mm:ss'),
+      '',
+      chalk.grey.bold('Engine type       ') + spider.type,
+      chalk.grey.bold('Most common error ') + (mostCommonError ? chalk.red(mostCommonError) : '-')
+    ].join('\n'));
   }
 
   // Branching the logger

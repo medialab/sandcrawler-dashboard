@@ -35,11 +35,11 @@
     "blessed-contrib": "0.0.9",
     "chalk": "^0.5.1",
     "lodash": "^3.1.0",
+    "moment": "^2.9.0",
     "sandcrawler-logger": "git+https://github.com/Yomguithereal/sandcrawler-logger.git"
   },
   "devDependencies": {
     "express": "^4.11.2",
-    "lodash": "^3.1.0",
     "sandcrawler": "git+https://github.com/medialab/sandcrawler.git"
   }
 }

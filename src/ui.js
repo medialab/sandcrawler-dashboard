@@ -50,7 +50,7 @@ function UI() {
       fg: 'blue'
     },
     width: '40%',
-    height: '40%',
+    height: '50%',
     columnSpacing: [6, 70, 20]
   });
   table.jobs = [];
@@ -92,7 +92,7 @@ function UI() {
   // Gauge component
   this.progressBar = blessed.ProgressBar({
     label: 'Progress - 0%',
-    top: '40%',
+    top: '50%',
     left: '60%',
     border: {
       type: 'line',
@@ -106,14 +106,26 @@ function UI() {
   // Stats component
   this.stats = blessed.box({
     label: 'Stats',
-    top: '50%',
+    top: '60%',
     left: '60%',
     border: {
       type: 'line',
       fg: 'blue'
     },
-    width: '40%',
-    height: '50%'
+    width: '20%',
+    height: '40%'
+  });
+
+  this.info = blessed.box({
+    label: 'Information',
+    top: '60%',
+    left: '80%',
+    border: {
+      type: 'line',
+      fg: 'blue'
+    },
+    width: '20%',
+    height: '40%'
   });
 
   // Rendering the UI
@@ -122,6 +134,7 @@ function UI() {
   screen.append(this.jobTable);
   screen.append(this.progressBar);
   screen.append(this.stats);
+  screen.append(this.info);
   screen.render();
 
   // Getting out of the dashboard (might get useful...)
