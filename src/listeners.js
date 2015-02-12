@@ -5,6 +5,7 @@
  * Hooking on the spider to relay information through the dahsboard's UI.
  */
 var logger = require('sandcrawler-logger'),
+    throttle = require('lodash.throttle'),
     util = require('util');
 
 module.exports = function(spider, ui) {
@@ -35,11 +36,11 @@ module.exports = function(spider, ui) {
   });
 
   // Sample data display
-  spider.on('job:success', function(job) {
+  spider.on('job:success', throttle(function(job) {
 
     ui.dataSample.setContent(util.inspect(job.res.data, {depth: 1}));
     render();
-  });
+  }, 2000));
 
   // Progress bar
   spider.on('job:end', function() {

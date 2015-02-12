@@ -32,6 +32,7 @@
   "homepage": "https://github.com/medialab/sandcrawler-dashboard",
   "dependencies": {
     "blessed": "0.0.45",
+    "lodash.throttle": "^3.0.0",
     "sandcrawler-logger": "git+https://github.com/Yomguithereal/sandcrawler-logger.git"
   },
   "devDependencies": {
