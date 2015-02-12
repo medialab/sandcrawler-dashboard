@@ -99,7 +99,7 @@ module.exports = function(spider, ui) {
   spider.on('job:success', function(job) {
     var j = ui.jobTable.find(job.id);
 
-    j.rows[0] = ' ' + chalk.bgGreen.bold.white(' ✔ ') + ' ';
+    j.rows[0] = ' ' + chalk.bgGreen.bold.white(' ✓ ') + ' ';
 
     ui.jobTable.update();
     render();
@@ -108,7 +108,7 @@ module.exports = function(spider, ui) {
   spider.on('job:fail', function(err, job) {
     var j = ui.jobTable.find(job.id);
 
-    j.rows[0] = ' ' + chalk.bgRed.bold.white(' ✖ ') + ' ';
+    j.rows[0] = ' ' + chalk.bgRed.bold.white(' ✗ ') + ' ';
     j.rows[2] = chalk.red(err.message);
 
     ui.jobTable.update();

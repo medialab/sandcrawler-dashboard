@@ -73,7 +73,7 @@ function UI() {
 
   // Getting my style
   table.rows.style.selected.bg = undefined;
-  table.rows.style.selected.fg = undefined;
+  table.rows.style.selected.fg = 'white';
 
   // Stalking hover in an awkward way...
   table.current = 0;
