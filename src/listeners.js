@@ -5,8 +5,9 @@
  * Hooking on the spider to relay information through the dahsboard's UI.
  */
 var logger = require('sandcrawler-logger'),
-    throttle = require('lodash.throttle'),
-    util = require('util');
+    chalk = require('chalk'),
+    util = require('util'),
+    _ = require('lodash');
 
 module.exports = function(spider, ui) {
 
@@ -36,13 +37,55 @@ module.exports = function(spider, ui) {
   });
 
   // Sample data display
-  spider.on('job:success', throttle(function(job) {
+  spider.on('job:success', _.throttle(function(job) {
 
     ui.dataSample.setContent(util.inspect(job.res.data, {depth: 1}));
     render();
   }, 2000));
 
-  // Progress bar
+  // Progress bar & job table
+  spider.on('job:start', function(job) {
+    var j = ui.jobTable.find(job.id);
+
+    if (j) {
+      j.rows[0] = ' ' + chalk.bgBlue.bold.white(' ~ ') + ' ';
+      j.rows[1] = chalk.bold.grey(job.req.url);
+      j.rows[2] = chalk.bold.white('-');
+    }
+    else {
+      ui.jobTable.jobs.push({
+        id: job.id,
+          rows: [
+          ' ' + chalk.bgBlue.bold.white(' ~ ') + ' ',
+          chalk.bold.grey(job.req.url),
+          chalk.bold.white('-')
+        ]
+      });
+    }
+
+    ui.jobTable.update();
+    render();
+  });
+
+  spider.on('job:success', function(job) {
+    var j = ui.jobTable.find(job.id);
+
+    j.rows[0] = ' ' + chalk.bgGreen.bold.white(' ✔ ') + ' ';
+
+    ui.jobTable.update();
+    render();
+  });
+
+  spider.on('job:fail', function(err, job) {
+    var j = ui.jobTable.find(job.id);
+
+    j.rows[0] = ' ' + chalk.bgRed.bold.white(' ✖ ') + ' ';
+    j.rows[2] = chalk.red(err.message);
+
+    ui.jobTable.update();
+    render();
+  });
+
   spider.on('job:end', function() {
     var completion = spider.stats.completion;
 

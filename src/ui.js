@@ -4,7 +4,9 @@
  *
  * Defining the blessed UI used by the plugin.
  */
-var blessed = require('blessed');
+var blessed = require('blessed'),
+    contrib = require('blessed-contrib'),
+    _ = require('lodash');
 
 function UI() {
 
@@ -17,7 +19,7 @@ function UI() {
     left: '0',
     border: {
       type: 'line',
-      fg: 'cyan'
+      fg: 'blue'
     },
     width: '60%',
     height: '70%',
@@ -32,24 +34,60 @@ function UI() {
     left: '0',
     border: {
       type: 'line',
-      fg: 'cyan'
+      fg: 'blue'
     },
     width: '60%',
     height: '30%'
   });
 
   // Job table component
-  this.jobTable = blessed.box({
+  var table = contrib.table({
     label: 'Jobs',
     top: '0',
     left: '60%',
     border: {
       type: 'line',
-      fg: 'cyan'
+      fg: 'blue'
     },
     width: '40%',
-    height: '40%'
+    height: '40%',
+    columnSpacing: [6, 70, 20]
   });
+  table.jobs = [];
+
+  table.find = function(id) {
+    return _.find(table.jobs, {id: id});
+  };
+
+  table.update = function() {
+    table.setData({
+      headers: ['', 'Url', 'Error'],
+      data: _.map(table.jobs, 'rows')
+    });
+
+    if (table.current === table.jobs.length - 2) {
+      table.rows.select(table.jobs.length - 1);
+      table.current = table.jobs.length - 1;
+    }
+  };
+
+  // Getting my style
+  table.rows.style.selected.bg = undefined;
+  table.rows.style.selected.fg = undefined;
+
+  // Stalking hover in an awkward way...
+  table.current = 0;
+
+  table.rows.on('key up', function() {
+    table.current = Math.max(0, table.current - 1);
+  });
+
+  table.rows.on('key down', function() {
+    table.current = Math.min(table.jobs.length - 1, table.current + 1);
+  });
+
+  table.focus();
+  this.jobTable = table;
 
   // Gauge component
   this.progressBar = blessed.ProgressBar({
@@ -58,7 +96,7 @@ function UI() {
     left: '60%',
     border: {
       type: 'line',
-      fg: 'cyan'
+      fg: 'blue'
     },
     width: '40%',
     height: '10%',
@@ -72,7 +110,7 @@ function UI() {
     left: '60%',
     border: {
       type: 'line',
-      fg: 'cyan'
+      fg: 'blue'
     },
     width: '40%',
     height: '50%'
