@@ -54,8 +54,8 @@ module.exports = function(spider, ui) {
       chalk.grey.bold('In-progress jobs ') + spider.stats.doing,
       chalk.grey.bold('Done jobs        ') + spider.stats.done,
       '',
-      chalk.grey.bold('Successes        ') + spider.stats.successes,
-      chalk.grey.bold('Failures         ') + spider.stats.failures,
+      chalk.grey.bold('Successes        ') + chalk.green(spider.stats.successes),
+      chalk.grey.bold('Failures         ') + chalk.red(spider.stats.failures),
       chalk.grey.bold('Success Rate     ') + spider.stats.successRate + '%',
     ].join('\n'));
 

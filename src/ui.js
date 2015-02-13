@@ -50,7 +50,7 @@ function UI() {
       fg: 'blue'
     },
     width: '40%',
-    height: '50%',
+    height: '60%',
     columnSpacing: [6, 70, 20]
   });
   table.jobs = [];
@@ -92,7 +92,7 @@ function UI() {
   // Gauge component
   this.progressBar = blessed.ProgressBar({
     label: 'Progress - 0%',
-    top: '50%',
+    top: '60%',
     left: '60%',
     border: {
       type: 'line',
@@ -106,26 +106,26 @@ function UI() {
   // Stats component
   this.stats = blessed.box({
     label: 'Stats',
-    top: '60%',
+    top: '70%',
     left: '60%',
     border: {
       type: 'line',
       fg: 'blue'
     },
     width: '20%',
-    height: '40%'
+    height: '30%'
   });
 
   this.info = blessed.box({
     label: 'Information',
-    top: '60%',
+    top: '70%',
     left: '80%',
     border: {
       type: 'line',
       fg: 'blue'
     },
     width: '20%',
-    height: '40%'
+    height: '30%'
   });
 
   // Rendering the UI
