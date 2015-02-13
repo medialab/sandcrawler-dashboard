@@ -138,11 +138,14 @@ module.exports = function(spider, ui) {
     render();
   });
 
-  spider.on('job:end', function() {
+  function updateCompletion() {
     var completion = spider.stats.completion;
 
     ui.progressBar.setProgress(completion);
     ui.progressBar.setLabel('Progress - ' + completion + '%');
     render();
-  });
+  }
+
+  spider.on('job:add', updateCompletion);
+  spider.on('job:end', updateCompletion);
 };
