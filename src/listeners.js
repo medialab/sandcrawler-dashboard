@@ -5,8 +5,10 @@
  * Hooking on the spider to relay information through the dahsboard's UI.
  */
 var logger = require('sandcrawler-logger'),
+    blessed = require('blessed'),
     chalk = require('chalk'),
     util = require('util'),
+    url = require('url'),
     _ = require('lodash');
 
 // Helpers
@@ -70,19 +72,22 @@ module.exports = function(spider, ui) {
   // Branching the logger
   spider.use(logger({
     out: function(txt) {
-      var lines = ui.log.lines;
-      lines.push(txt);
+      var lines = ui.log.lines,
+          wrapped = ui.log._wrapContent(txt, ui.log.width - 2);
 
-      if (lines.length > ui.log.height - 2)
-        lines.shift();
+      wrapped.forEach(function(line) {
+        lines.unshift(line);
+      });
 
-      ui.log.setItems(lines);
+      lines = lines.slice(0, ui.log.height - 2);
+
+      ui.log.setContent(lines.reverse().join('\n'));
       render();
     }
   }));
 
   // On end
-  spider.once('spider:end', function() {
+  spider.once('spider:teardown', function() {
     setTimeout(function() {
       spider.logger.info('Press Ctrl-c to exit...');
     }, 10);
@@ -99,9 +104,26 @@ module.exports = function(spider, ui) {
   spider.on('job:start', function(job) {
     var j = ui.jobTable.find(job.id);
 
+    var truncatedUrl = job.req.url.slice(-45);
+
+    if (truncatedUrl.length !== job.req.url.length) {
+      var parsed = url.parse(job.req.url),
+          root = parsed.protocol + parsed.host;
+
+      if (root.length > 40) {
+        truncatedUrl = root.slice(-43) + '...';
+      }
+      else {
+        truncatedUrl = (root + '/../' + _.last(parsed.path.split('/')));
+
+        if (truncatedUrl.length > 45)
+          truncatedUrl = root + '/../..';
+      }
+    }
+
     if (j) {
       j.rows[0] = ' ' + chalk.bgBlue.bold.white(' ~ ') + ' ';
-      j.rows[1] = chalk.bold.grey(job.req.url);
+      j.rows[1] = chalk.bold.grey(truncatedUrl);
       j.rows[2] = chalk.bold.white('-');
     }
     else {
@@ -109,7 +131,7 @@ module.exports = function(spider, ui) {
         id: job.id,
           rows: [
           ' ' + chalk.bgBlue.bold.white(' ~ ') + ' ',
-          chalk.bold.grey(job.req.url),
+          chalk.bold.grey(truncatedUrl),
           chalk.bold.white('-')
         ]
       });

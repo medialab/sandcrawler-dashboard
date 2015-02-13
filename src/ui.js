@@ -13,7 +13,7 @@ function UI() {
   var screen = blessed.screen();
 
   // Log component
-  this.log = blessed.list({
+  this.log = blessed.box({
     label: 'Log',
     top: '0',
     left: '0',
@@ -23,7 +23,7 @@ function UI() {
     },
     width: '60%',
     height: '70%',
-    interactive: false
+    wrap: true
   });
   this.log.lines = [];
 
