@@ -151,10 +151,14 @@ module.exports = function(spider, ui) {
   });
 
   spider.on('job:fail', function(err, job) {
-    var j = ui.jobTable.find(job.id);
+    var j = ui.jobTable.find(job.id),
+        errMessage = err.message;
+
+    if (errMessage.length > 12)
+      errMessage = errMessage.slice(0, 9) + '...';
 
     j.rows[0] = ' ' + chalk.bgRed.bold.white(' ✗ ') + ' ';
-    j.rows[2] = chalk.red(err.message);
+    j.rows[2] = chalk.red(errMessage);
 
     ui.jobTable.update();
     render();
