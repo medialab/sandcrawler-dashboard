@@ -93,13 +93,6 @@ module.exports = function(spider, ui) {
     }, 10);
   });
 
-  // Sample data display
-  spider.on('job:success', _.throttle(function(job) {
-
-    ui.dataSample.setContent(util.inspect(job.res.data, {depth: 1}));
-    render();
-  }, 2000));
-
   // Progress bar & job table
   spider.on('job:start', function(job) {
     var j = ui.jobTable.find(job.id);
@@ -162,6 +155,11 @@ module.exports = function(spider, ui) {
 
     ui.jobTable.update();
     render();
+  });
+
+  spider.on('job:end', function(job) {
+    ui.request.setContent(util.inspect(_.omit(job.req, ['retry', 'retryNow', 'retryLater']), {depth: 1}));
+    ui.response.setContent(util.inspect(_.omit(job.res, 'body'), {depth: 1}));
   });
 
   function updateCompletion() {

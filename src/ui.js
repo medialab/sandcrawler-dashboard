@@ -27,16 +27,29 @@ function UI() {
   });
   this.log.lines = [];
 
-  // Data sample component
-  this.dataSample = blessed.box({
-    label: 'Data Sample',
+  // Request component
+  this.request = blessed.box({
+    label: 'Request',
     top: '70%',
     left: '0',
     border: {
       type: 'line',
       fg: 'blue'
     },
-    width: '60%',
+    width: '30%',
+    height: '30%'
+  });
+
+  // Response component
+  this.response = blessed.box({
+    label: 'Response',
+    top: '70%',
+    left: '30%',
+    border: {
+      type: 'line',
+      fg: 'blue'
+    },
+    width: '30%',
     height: '30%'
   });
 
@@ -130,7 +143,8 @@ function UI() {
 
   // Rendering the UI
   screen.append(this.log);
-  screen.append(this.dataSample);
+  screen.append(this.request);
+  screen.append(this.response);
   screen.append(this.jobTable);
   screen.append(this.progressBar);
   screen.append(this.stats);
