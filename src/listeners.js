@@ -35,7 +35,7 @@ function formatMS(seconds) {
 }
 
 // Exporting listeners
-module.exports = function(spider, ui) {
+module.exports = function(spider, ui, opts) {
 
   function render() {
     updateInformation();
@@ -70,7 +70,7 @@ module.exports = function(spider, ui) {
   }
 
   // Branching the logger
-  spider.use(logger({
+  spider.use(logger(_.extend({
     out: function(txt) {
       var lines = ui.log.lines,
           wrapped = ui.log._wrapContent(txt, ui.log.width - 2);
@@ -84,7 +84,7 @@ module.exports = function(spider, ui) {
       ui.log.setContent(lines.reverse().join('\n'));
       render();
     }
-  }));
+  }, opts.logger)));
 
   // On end
   spider.once('spider:teardown', function() {

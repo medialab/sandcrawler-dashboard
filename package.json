@@ -1,6 +1,6 @@
 {
   "name": "sandcrawler-dashboard",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A handy terminal dashboard plugin for sandcrawler.",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,7 @@
     }
   ],
   "author": "yomguithereal <kropotkinepiotr@gmail.com>",
-  "license": "LGPL-3.0",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/medialab/sandcrawler-dashboard/issues"
   },
@@ -35,7 +35,7 @@
     "blessed-contrib": "0.0.9",
     "chalk": "^0.5.1",
     "lodash": "^3.1.0",
-    "sandcrawler-logger": "git+https://github.com/Yomguithereal/sandcrawler-logger.git"
+    "sandcrawler-logger": "0.1.0"
   },
   "devDependencies": {
     "express": "^4.11.2",

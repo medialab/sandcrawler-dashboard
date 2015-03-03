@@ -20,7 +20,7 @@ app.use('/', express.static(__dirname));
 
 // Spider
 var spider = sandcrawler.spider('MySpider')
-  .use(dashboard())
+  .use(dashboard({logger: {color: 'red'}}))
   .config({concurrency: 4})
   .beforeScraping(function(req, next) {
     setTimeout(next, randInt(2, 10) * 500);
