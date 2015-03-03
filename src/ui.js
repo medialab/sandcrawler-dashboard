@@ -67,20 +67,33 @@ function UI() {
     columnSpacing: [6, 70, 20]
   });
   table.jobs = [];
+  table.jobIndex = {};
+
+  table.add = function(job) {
+    this.jobs.push(job);
+    this.jobIndex[job.id] = this.jobs.length - 1;
+    return this;
+  };
+
+  table.remove = function(id) {
+    _.pullAt(this.jobs, this.jobIndex[id]);
+    delete this.jobIndex[id];
+    return this;
+  };
 
   table.find = function(id) {
-    return _.find(table.jobs, {id: id});
+    return this.jobs[this.jobIndex[id]];
   };
 
   table.update = function() {
-    table.setData({
+    this.setData({
       headers: ['', 'Url', 'Error'],
-      data: _.map(table.jobs, 'rows')
+      data: _.map(this.jobs, 'rows')
     });
 
-    if (table.current === table.jobs.length - 2) {
-      table.rows.select(table.jobs.length - 1);
-      table.current = table.jobs.length - 1;
+    if (this.current === this.jobs.length - 2) {
+      this.rows.select(this.jobs.length - 1);
+      this.current = this.jobs.length - 1;
     }
   };
 

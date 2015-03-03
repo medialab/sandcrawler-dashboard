@@ -21,11 +21,11 @@ app.use('/', express.static(__dirname));
 // Spider
 var spider = sandcrawler.spider('MySpider')
   .use(dashboard({logger: {color: 'red'}}))
-  .config({concurrency: 4})
+  .config({concurrency: 4, maxRetries: 3})
   .beforeScraping(function(req, next) {
     setTimeout(next, randInt(2, 10) * 500);
   })
-  .urls(_.range(10 * 1000).map(function(i) {
+  .urls(_.range(50).map(function(i) {
     var n = randInt(1, 10);
     if (n > 9)
       return 'http://localhost:3002/basic/this/is/an-insupportably-long-and-inexistant/url/just-for-thesakeofitandbecauseI/can.tm';
@@ -44,6 +44,10 @@ var spider = sandcrawler.spider('MySpider')
       return next(new Error('invalid-data'));
     else
       return next();
+  })
+  .result(function(err, req) {
+    if (err)
+      return req.retryLater();
   });
 
 // Listening

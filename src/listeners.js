@@ -120,21 +120,17 @@ module.exports = function(spider, ui, opts) {
 
     var truncatedUrl = formatUrl(job.req.url);
 
-    if (j) {
-      j.rows[0] = ' ' + chalk.bgBlue.bold.white(' ~ ') + ' ';
-      j.rows[1] = chalk.bold.grey(truncatedUrl);
-      j.rows[2] = chalk.bold.white('-');
-    }
-    else {
-      ui.jobTable.jobs.push({
-        id: job.id,
-          rows: [
-          ' ' + chalk.bgBlue.bold.white(' ~ ') + ' ',
-          chalk.bold.grey(truncatedUrl),
-          chalk.bold.white('-')
-        ]
-      });
-    }
+    if (j)
+      ui.jobTable.remove(job.id);
+
+    ui.jobTable.add({
+      id: job.id,
+      rows: [
+        ' ' + chalk.bgBlue.bold.white(' ~ ') + ' ',
+        chalk.bold.grey(truncatedUrl),
+        chalk.bold.white('-')
+      ]
+    });
 
     ui.jobTable.update();
     render();
@@ -148,6 +144,14 @@ module.exports = function(spider, ui, opts) {
 
     ui.jobTable.update();
     render();
+  });
+
+  spider.on('job:retry', function(job) {
+    var j = ui.jobTable.find(job.id);
+
+    j.rows[0] = ' ' + chalk.bgMagenta.bold.white(' · ') + ' ';
+
+    ui.jobTable.update();
   });
 
   spider.on('job:fail', function(err, job) {
@@ -166,8 +170,35 @@ module.exports = function(spider, ui, opts) {
   });
 
   spider.on('job:end', function(job) {
-    ui.request.setContent(util.inspect(_.omit(job.req, ['retry', 'retryNow', 'retryLater']), {depth: 1}));
-    ui.response.setContent(util.inspect(_.omit(job.res, 'body'), {depth: 1}));
+
+    // Request
+    var reqText = '';
+    reqText += chalk.grey.bold('Url') + ' ' + formatUrl(job.req.url) + '\n';
+
+    _(job.req)
+      .omit(['url', 'retry', 'retryNow', 'retryLater'])
+      .forIn(function(v, k) {
+        reqText += chalk.grey.bold(_.capitalize(k)) + ' ' + util.inspect(v, {depth: 1}) + '\n';
+      })
+      .value();
+
+    ui.request.setContent(reqText);
+
+    // Response
+    var resText = '';
+
+    // TODO: if error, display
+
+    resText += chalk.grey.bold('Url') + ' ' + formatUrl(job.res.url) + '\n';
+
+    _(job.res)
+      .omit(['url', 'body'])
+      .forIn(function(v, k) {
+        resText += chalk.grey.bold(_.capitalize(k)) + ' ' + util.inspect(v, {depth: 1}) + '\n';
+      })
+      .value();
+
+    ui.response.setContent(resText);
   });
 
   function updateCompletion() {
