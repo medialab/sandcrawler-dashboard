@@ -25,7 +25,7 @@ var spider = sandcrawler.spider('MySpider')
   .beforeScraping(function(req, next) {
     setTimeout(next, randInt(2, 10) * 500);
   })
-  .urls(_.range(50).map(function(i) {
+  .urls(_.range(10 * 1000).map(function(i) {
     var n = randInt(1, 10);
     if (n > 9)
       return 'http://localhost:3002/basic/this/is/an-insupportably-long-and-inexistant/url/just-for-thesakeofitandbecauseI/can.tm';

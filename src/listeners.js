@@ -8,7 +8,7 @@ var logger = require('sandcrawler-logger'),
     blessed = require('blessed'),
     chalk = require('chalk'),
     util = require('util'),
-    url = require('url'),
+    nodeUrl = require('url'),
     _ = require('lodash');
 
 // Helpers
@@ -22,7 +22,7 @@ function pad(nb) {
 
 function formatHMS(seconds) {
   var hours = (seconds / 3600) | 0,
-      minutes = (seconds / 60) | 0,
+      minutes = ((seconds - (hours * 3600)) / 60) | 0,
       seconds = seconds % 60;
 
   return pad(hours) + ':' + pad(minutes) + ':' + pad(seconds);
@@ -32,6 +32,27 @@ function formatMS(seconds) {
   var minutes = (seconds / 60) | 0,
       seconds = seconds % 60;
   return pad(minutes) + ':' + pad(seconds);
+}
+
+function formatUrl(url) {
+  var truncatedUrl = url.slice(-45);
+
+  if (truncatedUrl.length !== url.length) {
+    var parsed = nodeUrl.parse(url),
+        root = parsed.protocol + '//' +  parsed.host;
+
+    if (root.length > 40) {
+      truncatedUrl = root.slice(-43) + '...';
+    }
+    else {
+      truncatedUrl = (root + '/../' + _.last(parsed.path.split('/')));
+
+      if (truncatedUrl.length > 45)
+        truncatedUrl = root + '/../..';
+    }
+  }
+
+  return truncatedUrl;
 }
 
 // Exporting listeners
@@ -97,22 +118,7 @@ module.exports = function(spider, ui, opts) {
   spider.on('job:start', function(job) {
     var j = ui.jobTable.find(job.id);
 
-    var truncatedUrl = job.req.url.slice(-45);
-
-    if (truncatedUrl.length !== job.req.url.length) {
-      var parsed = url.parse(job.req.url),
-          root = parsed.protocol + parsed.host;
-
-      if (root.length > 40) {
-        truncatedUrl = root.slice(-43) + '...';
-      }
-      else {
-        truncatedUrl = (root + '/../' + _.last(parsed.path.split('/')));
-
-        if (truncatedUrl.length > 45)
-          truncatedUrl = root + '/../..';
-      }
-    }
+    var truncatedUrl = formatUrl(job.req.url);
 
     if (j) {
       j.rows[0] = ' ' + chalk.bgBlue.bold.white(' ~ ') + ' ';
@@ -138,6 +144,7 @@ module.exports = function(spider, ui, opts) {
     var j = ui.jobTable.find(job.id);
 
     j.rows[0] = ' ' + chalk.bgGreen.bold.white(' ✓ ') + ' ';
+    j.rows[1] = chalk.bold.grey(formatUrl(job.res.url || job.req.url));
 
     ui.jobTable.update();
     render();
@@ -151,6 +158,7 @@ module.exports = function(spider, ui, opts) {
       errMessage = errMessage.slice(0, 9) + '...';
 
     j.rows[0] = ' ' + chalk.bgRed.bold.white(' ✗ ') + ' ';
+    j.rows[1] = chalk.bold.grey(formatUrl(job.res.url || job.req.url));
     j.rows[2] = chalk.red(errMessage);
 
     ui.jobTable.update();
