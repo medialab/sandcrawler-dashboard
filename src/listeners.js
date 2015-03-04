@@ -34,20 +34,22 @@ function formatMS(seconds) {
   return pad(minutes) + ':' + pad(seconds);
 }
 
-function formatUrl(url) {
-  var truncatedUrl = url.slice(-45);
+function formatUrl(url, pad) {
+  pad = pad || 45;
+
+  var truncatedUrl = url.slice(-pad);
 
   if (truncatedUrl.length !== url.length) {
     var parsed = nodeUrl.parse(url),
         root = parsed.protocol + '//' +  parsed.host;
 
-    if (root.length > 40) {
-      truncatedUrl = root.slice(-43) + '...';
+    if (root.length > pad - 5) {
+      truncatedUrl = root.slice(-pad - 2) + '...';
     }
     else {
       truncatedUrl = (root + '/../' + _.last(parsed.path.split('/')));
 
-      if (truncatedUrl.length > 45)
+      if (truncatedUrl.length > pad)
         truncatedUrl = root + '/../..';
     }
   }
@@ -166,11 +168,15 @@ module.exports = function(spider, ui, opts) {
     render();
   });
 
-  spider.on('job:end', function(status, job) {
+  function updateReqRes(err, job) {
+    if (!job) {
+      job = err;
+      err = null;
+    }
 
     // Request
     var reqText = '';
-    reqText += chalk.grey.bold('Url') + ' ' + formatUrl(job.req.url) + '\n';
+    reqText += chalk.grey.bold('Url') + ' ' + formatUrl(job.req.url, ui.request.width - 2 - 4) + '\n';
 
     _(job.req)
       .omit(['url', 'retry', 'retryNow', 'retryLater'])
@@ -184,19 +190,23 @@ module.exports = function(spider, ui, opts) {
     // Response
     var resText = '';
 
-    // TODO: if error, display
+    if (err)
+      resText += chalk.red.bold('Error') + ' ' + (err.message || err) + '\n';
 
-    resText += chalk.grey.bold('Url') + ' ' + formatUrl(job.res.url || job.req.url) + '\n';
+    resText += chalk.grey.bold('Url') + ' ' + formatUrl(job.res.url || job.req.url, ui.response.width - 2 - 4) + '\n';
 
     _(job.res)
       .omit(['url', 'body'])
       .forIn(function(v, k) {
-        resText += chalk.grey.bold(_.capitalize(k)) + ' ' + util.inspect(v, {depth: 1}) + '\n';
+        resText += chalk[k === 'data' && !err ? 'green' : 'grey'].bold(_.capitalize(k)) + ' ' + util.inspect(v, {depth: 1}) + '\n';
       })
       .value();
 
     ui.response.setContent(resText);
-  });
+  };
+
+  spider.on('job:success', updateReqRes);
+  spider.on('job:fail', updateReqRes);
 
   function updateCompletion() {
     var completion = spider.stats.completion;
