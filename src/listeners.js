@@ -189,7 +189,7 @@ module.exports = function(spider, ui, opts) {
 
     // TODO: if error, display
 
-    resText += chalk.grey.bold('Url') + ' ' + formatUrl(job.res.url) + '\n';
+    resText += chalk.grey.bold('Url') + ' ' + formatUrl(job.res.url || job.req.url) + '\n';
 
     _(job.res)
       .omit(['url', 'body'])
