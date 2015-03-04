@@ -92,7 +92,6 @@ module.exports = function(spider, ui, opts) {
       chalk.grey.bold('Elapsed time      ') + formatHMS(spider.stats.getElapsedTime()),
       chalk.grey.bold('Remaining time    ') + formatHMS(spider.stats.getRemainingTimeEstimation()),
       chalk.grey.bold('Time per job      ') + '   ' + formatMS(spider.stats.averageTimePerJob),
-      '',
       chalk.grey.bold('Errors ')
     ].concat(errors).join('\n'));
   }
@@ -195,15 +194,17 @@ module.exports = function(spider, ui, opts) {
     // Response
     var resText = '';
 
+    resText += chalk.grey.bold('Url') + ' ' + formatUrl(job.res.url || job.req.url, ui.response.width - 2 - 4) + '\n';
+
     if (err)
       resText += chalk.red.bold('Error') + ' ' + (err.message || err) + '\n';
 
-    resText += chalk.grey.bold('Url') + ' ' + formatUrl(job.res.url || job.req.url, ui.response.width - 2 - 4) + '\n';
+    resText += chalk[err ? 'grey' : 'green'].bold('Data') + ' ' + util.inspect(job.res.data, {depth: 1}) + '\n';
 
     _(job.res)
-      .omit(['url', 'body'])
+      .omit(['url', 'body', 'data'])
       .forIn(function(v, k) {
-        resText += chalk[k === 'data' && !err ? 'green' : 'grey'].bold(_.capitalize(k)) + ' ' + util.inspect(v, {depth: 1}) + '\n';
+        resText += chalk.grey.bold(_.capitalize(k)) + ' ' + util.inspect(v, {depth: 1}) + '\n';
       })
       .value();
 
