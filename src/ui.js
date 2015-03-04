@@ -66,51 +66,37 @@ function UI() {
     height: '60%',
     columnSpacing: [6, 70, 20]
   });
-  table.jobs = [];
-  table.jobIndex = {};
+  table.jobs = {};
 
-  table.add = function(job) {
-    this.jobs.push(job);
-    this.jobIndex[job.id] = this.jobs.length - 1;
+  table.add = function(id, rows) {
+    this.jobs[id] = rows;
     return this;
   };
 
   table.remove = function(id) {
-    _.pullAt(this.jobs, this.jobIndex[id]);
-    delete this.jobIndex[id];
+    delete this.jobs[id];
+
     return this;
   };
 
   table.find = function(id) {
-    return this.jobs[this.jobIndex[id]];
+    return this.jobs[id];
   };
 
   table.update = function() {
+    var data = _.values(this.jobs);
+
     this.setData({
       headers: ['', 'Url', 'Error'],
-      data: _.map(this.jobs, 'rows')
+      data: data
     });
 
-    if (this.current === this.jobs.length - 2) {
-      this.rows.select(this.jobs.length - 1);
-      this.current = this.jobs.length - 1;
-    }
+    this.rows.select(data.length - 1);
   };
 
   // Getting my style
   table.rows.style.selected.bg = undefined;
   table.rows.style.selected.fg = 'white';
-
-  // Stalking hover in an awkward way...
-  table.current = 0;
-
-  table.rows.on('key up', function() {
-    table.current = Math.max(0, table.current - 1);
-  });
-
-  table.rows.on('key down', function() {
-    table.current = Math.min(table.jobs.length - 1, table.current + 1);
-  });
 
   table.focus();
   this.jobTable = table;

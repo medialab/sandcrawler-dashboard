@@ -123,53 +123,50 @@ module.exports = function(spider, ui, opts) {
     if (j)
       ui.jobTable.remove(job.id);
 
-    ui.jobTable.add({
-      id: job.id,
-      rows: [
-        ' ' + chalk.bgBlue.bold.white(' ~ ') + ' ',
-        chalk.bold.grey(truncatedUrl),
-        chalk.bold.white('-')
-      ]
-    });
+    ui.jobTable.add(job.id, [
+      ' ' + chalk.bgBlue.bold.white(' ~ ') + ' ',
+      chalk.bold.grey(truncatedUrl),
+      chalk.bold.white('-')
+    ]);
 
     ui.jobTable.update();
     render();
   });
 
   spider.on('job:success', function(job) {
-    var j = ui.jobTable.find(job.id);
+    var rows = ui.jobTable.find(job.id);
 
-    j.rows[0] = ' ' + chalk.bgGreen.bold.white(' ✓ ') + ' ';
-    j.rows[1] = chalk.bold.grey(formatUrl(job.res.url || job.req.url));
+    rows[0] = ' ' + chalk.bgGreen.bold.white(' ✓ ') + ' ';
+    rows[1] = chalk.bold.grey(formatUrl(job.res.url || job.req.url));
 
     ui.jobTable.update();
     render();
   });
 
   spider.on('job:retry', function(job) {
-    var j = ui.jobTable.find(job.id);
+    var rows = ui.jobTable.find(job.id);
 
-    j.rows[0] = ' ' + chalk.bgMagenta.bold.white(' · ') + ' ';
+    rows[0] = ' ' + chalk.bgMagenta.bold.white(' · ') + ' ';
 
     ui.jobTable.update();
   });
 
   spider.on('job:fail', function(err, job) {
-    var j = ui.jobTable.find(job.id),
+    var rows = ui.jobTable.find(job.id),
         errMessage = err.message;
 
     if (errMessage.length > 12)
       errMessage = errMessage.slice(0, 9) + '...';
 
-    j.rows[0] = ' ' + chalk.bgRed.bold.white(' ✗ ') + ' ';
-    j.rows[1] = chalk.bold.grey(formatUrl(job.res.url || job.req.url));
-    j.rows[2] = chalk.red(errMessage);
+    rows[0] = ' ' + chalk.bgRed.bold.white(' ✗ ') + ' ';
+    rows[1] = chalk.bold.grey(formatUrl(job.res.url || job.req.url));
+    rows[2] = chalk.red(errMessage);
 
     ui.jobTable.update();
     render();
   });
 
-  spider.on('job:end', function(job) {
+  spider.on('job:end', function(status, job) {
 
     // Request
     var reqText = '';

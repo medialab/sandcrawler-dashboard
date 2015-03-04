@@ -21,7 +21,7 @@ app.use('/', express.static(__dirname));
 // Spider
 var spider = sandcrawler.spider('MySpider')
   .use(dashboard({logger: {color: 'red'}}))
-  .config({concurrency: 4, maxRetries: 3})
+  .config({concurrency: 4, maxRetries: 3, autoRetry: 'now'})
   .beforeScraping(function(req, next) {
     setTimeout(next, randInt(2, 10) * 500);
   })
@@ -46,8 +46,8 @@ var spider = sandcrawler.spider('MySpider')
       return next();
   })
   .result(function(err, req) {
-    if (err)
-      return req.retryLater();
+    // if (err)
+    //   return req.retryLater();
   });
 
 // Listening
