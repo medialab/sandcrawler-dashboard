@@ -66,11 +66,15 @@ module.exports = function(spider, ui, opts) {
   }
 
   function updateInformation() {
-    var mostCommonError = _(spider.stats.errorIndex)
+    var errors = _(spider.stats.errorIndex)
       .pairs()
-      .max(function(p) {
-        return p[1];
-      })[0];
+      .sortBy(function(p) {
+        return -p[1];
+      })
+      .map(function(p) {
+        return '  ' + chalk.red(p[0]) + ' ' + p[1];
+      })
+      .value();
 
     ui.stats.setContent([
       chalk.grey.bold('Queued jobs      ') + spider.stats.queued,
@@ -80,6 +84,8 @@ module.exports = function(spider, ui, opts) {
       chalk.grey.bold('Successes        ') + chalk.green(spider.stats.successes),
       chalk.grey.bold('Failures         ') + chalk.red(spider.stats.failures),
       chalk.grey.bold('Success Rate     ') + spider.stats.successRate + '%',
+      '',
+      chalk.grey.bold('Engine type       ') + spider.type
     ].join('\n'));
 
     ui.info.setContent([
@@ -87,9 +93,8 @@ module.exports = function(spider, ui, opts) {
       chalk.grey.bold('Remaining time    ') + formatHMS(spider.stats.getRemainingTimeEstimation()),
       chalk.grey.bold('Time per job      ') + '   ' + formatMS(spider.stats.averageTimePerJob),
       '',
-      chalk.grey.bold('Engine type       ') + spider.type,
-      chalk.grey.bold('Most common error ') + (mostCommonError ? chalk.red(mostCommonError) : '-')
-    ].join('\n'));
+      chalk.grey.bold('Errors ')
+    ].concat(errors).join('\n'));
   }
 
   // Branching the logger

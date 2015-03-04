@@ -21,7 +21,7 @@ app.use('/', express.static(__dirname));
 // Spider
 var spider = sandcrawler.spider('MySpider')
   .use(dashboard())
-  .config({concurrency: 4, maxRetries: 3, autoRetry: 'now'})
+  .config({concurrency: 4, maxRetries: 2, autoRetry: 'later'})
   .beforeScraping(function(req, next) {
     setTimeout(next, randInt(2, 10) * 500);
   })
