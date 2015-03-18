@@ -65,6 +65,9 @@ module.exports = function(spider, ui, opts) {
     return ui.screen.render();
   }
 
+  // Rendering every now and then...
+  var renderInterval = setInterval(render, 30);
+
   function updateInformation() {
     var errors = _(spider.stats.errorIndex)
       .pairs()
@@ -109,14 +112,16 @@ module.exports = function(spider, ui, opts) {
       lines = lines.slice(0, ui.log.height - 2);
 
       ui.log.setContent(lines.reverse().join('\n'));
-      render();
+
     }
   }, opts.logger)));
 
   // On end
   spider.once('spider:teardown', function() {
+    clearInterval(renderInterval);
     setTimeout(function() {
       spider.logger.info('Press Ctrl-c to exit...');
+      render();
     }, 10);
   });
 
@@ -136,7 +141,6 @@ module.exports = function(spider, ui, opts) {
     ]);
 
     ui.jobTable.update();
-    render();
   });
 
   spider.on('job:success', function(job) {
@@ -146,7 +150,6 @@ module.exports = function(spider, ui, opts) {
     rows[1] = chalk.bold.grey(formatUrl(job.res.url || job.req.url));
 
     ui.jobTable.update();
-    render();
   });
 
   spider.on('job:retry', function(job) {
@@ -169,7 +172,6 @@ module.exports = function(spider, ui, opts) {
     rows[2] = chalk.red(errMessage);
 
     ui.jobTable.update();
-    render();
   });
 
   function updateReqRes(err, job) {
@@ -219,7 +221,6 @@ module.exports = function(spider, ui, opts) {
 
     ui.progressBar.setProgress(completion);
     ui.progressBar.setLabel('Progress - ' + completion + '%');
-    render();
   }
 
   spider.on('job:add', updateCompletion);
