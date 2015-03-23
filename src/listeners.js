@@ -88,7 +88,8 @@ module.exports = function(spider, ui, opts) {
       chalk.grey.bold('Failures         ') + chalk.red(spider.stats.failures),
       chalk.grey.bold('Success Rate     ') + spider.stats.successRate + '%',
       '',
-      chalk.grey.bold('Engine type      ') + spider.type
+      chalk.grey.bold('Engine type      ') + spider.type,
+      chalk.grey.bold('Concurrency      ') + spider.options.concurrency
     ].join('\n'));
 
     ui.info.setContent([
