@@ -216,7 +216,7 @@ module.exports = function(spider, ui, opts) {
     resText += chalk[err ? 'grey' : 'green'].bold('Data') + ' ' + util.inspect(job.res.data, {depth: 1}) + '\n';
 
     _(job.res)
-      .omit(['url', 'body', 'data'])
+      .omit(['url', 'body', 'data', 'error'])
       .forIn(function(v, k) {
         resText += chalk.grey.bold(_.capitalize(k)) + ' ' + util.inspect(v, {depth: 1}) + '\n';
       })
