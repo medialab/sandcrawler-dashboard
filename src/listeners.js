@@ -92,10 +92,14 @@ module.exports = function(spider, ui, opts) {
       chalk.grey.bold('Concurrency      ') + spider.options.concurrency
     ].join('\n'));
 
+    var elapsed = spider.stats.getElapsedTime(),
+        estimate = spider.stats.getRemainingTimeEstimation(),
+        average = spider.stats.averageTimePerJob;
+
     ui.info.setContent([
-      chalk.grey.bold('Elapsed time      ') + formatHMS(spider.stats.getElapsedTime()),
-      chalk.grey.bold('Remaining time    ') + formatHMS(spider.stats.getRemainingTimeEstimation()),
-      chalk.grey.bold('Time per job      ') + '   ' + formatMS(spider.stats.averageTimePerJob),
+      chalk.grey.bold('Elapsed time      ') + formatHMS(elapsed),
+      chalk.grey.bold('Remaining time    ') + (estimate ? formatHMS(estimate) : '       ~'),
+      chalk.grey.bold('Time per job      ') + '   ' + (average ? formatMS(average) : '    ~'),
       chalk.grey.bold('Errors ')
     ].concat(errors).join('\n'));
   }
