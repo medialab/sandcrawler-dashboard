@@ -23,7 +23,7 @@ function pad(nb) {
 function formatHMS(seconds) {
   var hours = (seconds / 3600) | 0,
       minutes = ((seconds - (hours * 3600)) / 60) | 0,
-      seconds = seconds % 60;
+      seconds = Math.round(seconds) % 60;
 
   return pad(hours) + ':' + pad(minutes) + ':' + pad(seconds);
 }
