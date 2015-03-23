@@ -165,6 +165,13 @@ module.exports = function(spider, ui, opts) {
     ui.jobTable.update();
   });
 
+  spider.on('job:discard', function(err, job) {
+    var j = ui.jobTable.find(job.id);
+
+    if (j)
+      ui.jobTable.remove(job.id);
+  });
+
   spider.on('job:fail', function(err, job) {
     var rows = ui.jobTable.find(job.id),
         errMessage = err.message;

@@ -23,11 +23,18 @@ var spider = sandcrawler.spider('MySpider')
   .use(dashboard())
   .config({concurrency: 4, maxRetries: 2, autoRetry: 'later'})
   .beforeScraping(function(req, next) {
-    setTimeout(next, randInt(2, 10) * 500);
+    setTimeout(function() {
+      var n = randInt(1, 10);
+
+      if (n > 9)
+        return next(new Error('discard'));
+      else
+        return next();
+    }, randInt(2, 10) * 500);
   })
   .urls(_.range(50).map(function(i) {
     var n = randInt(1, 10);
-    if (n > 9)
+    if (n > 5)
       return 'http://localhost:3002/basic/this/is/an-insupportably-long-and-inexistant/url/just-for-thesakeofitandbecauseI/can.tm';
     return 'http://localhost:3002/basic.html?' + (i + 1);
   }))
