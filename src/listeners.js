@@ -30,7 +30,7 @@ function formatHMS(seconds) {
 
 function formatMS(seconds) {
   var minutes = (seconds / 60) | 0,
-      seconds = seconds % 60;
+      seconds = Math.round(seconds) % 60;
   return pad(minutes) + ':' + pad(seconds);
 }
 
