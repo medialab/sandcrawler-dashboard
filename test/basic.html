@@ -18,5 +18,19 @@
         <a href="http://unknownsite.com">Unknown site</a>
       </li>
     </ul>
+    <script type="text/javascript">
+      function randInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      var n = randInt(1, 10);
+
+      if (n <= 6)
+        console.log('Hey');
+      else if (n > 6 && n < 8)
+        console.log('This is frankly nearly a roman I am writing in the console here, don\'t you think?\nThis is because I am the console Shakespeare dude.\nOne cannot enjoy his/her console fully before having read tons and tons of useless text in it.\nBut, hey, this is just my opinion...');
+      else
+        throw Error('Custom error message');
+    </script>
   </body>
 </html>

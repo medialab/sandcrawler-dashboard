@@ -35,7 +35,7 @@
     "blessed-contrib": "^1.0.11",
     "chalk": "^1.0.0",
     "lodash": "^3.1.0",
-    "sandcrawler-logger": "0.1.0"
+    "sandcrawler-logger": "0.1.1"
   },
   "devDependencies": {
     "express": "^4.11.2",

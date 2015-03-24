@@ -6,7 +6,7 @@
  */
 var express = require('express'),
     sandcrawler = require('sandcrawler'),
-    dashboard = require('../index.js'),
+    logger = require('../index.js'),
     _ = require('lodash');
 
 // Helpers
@@ -19,9 +19,9 @@ var app = express();
 app.use('/', express.static(__dirname));
 
 // Spider
-var spider = sandcrawler.spider('MySpider')
-  .use(dashboard())
-  .config({concurrency: 4, maxRetries: 2, autoRetry: 'later'})
+var spider = sandcrawler.phantomJawa('MyJawa')
+  .use(logger())
+  .config({concurrency: 4, autoRetry: true, maxRetries: 3})
   .beforeScraping(function(req, next) {
     setTimeout(function() {
       var n = randInt(1, 10);
@@ -34,7 +34,7 @@ var spider = sandcrawler.spider('MySpider')
   })
   .urls(_.range(50).map(function(i) {
     var n = randInt(1, 10);
-    if (n > 5)
+    if (n > 9)
       return 'http://localhost:3002/basic/this/is/an-insupportably-long-and-inexistant/url/just-for-thesakeofitandbecauseI/can.tm';
     return 'http://localhost:3002/basic.html?' + (i + 1);
   }))
@@ -51,10 +51,6 @@ var spider = sandcrawler.spider('MySpider')
       return next(new Error('invalid-data'));
     else
       return next();
-  })
-  .result(function(err, req) {
-    // if (err)
-    //   return req.retryLater();
   });
 
 // Listening
