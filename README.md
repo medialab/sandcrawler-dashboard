@@ -2,6 +2,8 @@
 
 A handy terminal dashboard displaying advanced information about one of your [sandcrawler](http://medialab.github.io/sandcrawler/) spiders.
 
+![demo](./demo.gif)
+
 ## Installation
 
 You can install **sandcrawler-dashboard** through npm:

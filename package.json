@@ -4,6 +4,7 @@
   "description": "A handy terminal dashboard plugin for sandcrawler.",
   "main": "index.js",
   "scripts": {
+    "demo": "node ./test/demo.js",
     "test": "node ./test/test.js"
   },
   "repository": {
