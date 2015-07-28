@@ -4,7 +4,7 @@
  *
  * The rendered dashboard itself.
  */
-import React, {Component, PropTypes} from 'react-blessed/node_modules/react';
+import React, {Component, PropTypes} from 'react';
 import {render} from 'react-blessed';
 import Log from './components/log.jsx';
 import ReqRes from './components/reqres.jsx';

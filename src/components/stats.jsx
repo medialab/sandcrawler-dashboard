@@ -4,7 +4,7 @@
  *
  * Component displaying basic stats about the spider.
  */
-import React, {Component, PropTypes} from 'react-blessed/node_modules/react';
+import React, {Component, PropTypes} from 'react';
 import stylesheet from '../stylesheet';
 import {formatHMS, formatMS} from '../helpers';
 import _ from 'lodash';

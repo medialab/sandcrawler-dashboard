@@ -4,7 +4,7 @@
  *
  * Component displaying the spider's completion.
  */
-import React, {Component, PropTypes} from 'react-blessed/node_modules/react';
+import React, {Component, PropTypes} from 'react';
 import stylesheet from '../stylesheet';
 
 export default class Progress extends Component {
