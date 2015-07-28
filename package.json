@@ -4,8 +4,8 @@
   "description": "A handy terminal dashboard plugin for sandcrawler.",
   "main": "index.js",
   "scripts": {
-    "demo": "node ./test/demo.js",
-    "test": "node ./test/test.js"
+    "demo": "babel-node ./test/demo.js",
+    "test": "babel-node ./test/test.js"
   },
   "repository": {
     "type": "git",
@@ -32,13 +32,13 @@
   },
   "homepage": "https://github.com/medialab/sandcrawler-dashboard",
   "dependencies": {
-    "blessed": "0.0.51",
-    "blessed-contrib": "^1.0.11",
-    "chalk": "^1.0.0",
+    "blessed": "^0.1.15",
     "lodash": "^3.1.0",
+    "react": "^0.14.0-beta1",
     "sandcrawler-logger": "0.1.1"
   },
   "devDependencies": {
+    "babel": "^5.8.12",
     "express": "^4.11.2",
     "sandcrawler": "git+https://github.com/medialab/sandcrawler.git"
   }

@@ -5,16 +5,12 @@
  * Just a matter of exporting the plugin function. Not something very fancy
  * as you might notice.
  */
-var UI = require('./src/ui.js'),
-    listeners = require('./src/listeners.js'),
-    defaults = require('./defaults.json'),
-    _ = require('lodash');
+import app from './src/app.jsx';
+import defaults from './defaults.json';
+import _ from 'lodash';
 
-module.exports = function(opts) {
-
+export default function(opts) {
   return function(spider) {
-    var ui = new UI();
-
-    return listeners(spider, ui, _.extend({}, defaults, opts));
+    return app(spider, _.extend({}, defaults, opts));
   };
 };
