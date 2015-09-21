@@ -4,6 +4,9 @@
  *
  * Miscellaneous utility functions.
  */
+import {default as nodeUrl} from 'url';
+import {last} from 'lodash';
+
 function pad(nb) {
   const nbstr = '' + nb;
 
@@ -39,7 +42,7 @@ export function formatUrl(url, pad) {
       truncatedUrl = root.slice(-pad - 2) + '...';
     }
     else {
-      truncatedUrl = (root + '/../' + _.last(parsed.path.split('/')));
+      truncatedUrl = (root + '/../' + last(parsed.path.split('/')));
 
       if (truncatedUrl.length > pad)
         truncatedUrl = root + '/../..';
