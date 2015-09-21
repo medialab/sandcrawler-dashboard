@@ -30,7 +30,7 @@ var spider = sandcrawler.phantomJawa('MyJawa')
         return next(new Error('discard'));
       else
         return next();
-    }, randInt(2, 10) * 500);
+    }, randInt(2, 10) * 50);
   })
   .urls(_.range(50).map(function(i) {
     var n = randInt(1, 10);

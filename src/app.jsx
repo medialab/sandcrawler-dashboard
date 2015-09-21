@@ -6,6 +6,7 @@
  */
 import React, {Component, PropTypes} from 'react';
 import {render} from 'react-blessed';
+import blessed from 'blessed';
 import Log from './components/log.jsx';
 import ReqRes from './components/reqres.jsx';
 import Jobs from './components/jobs.jsx';
@@ -14,11 +15,13 @@ import Stats from './components/stats.jsx';
 
 class Application extends Component {
   static childContextTypes = {
+    options: PropTypes.object.isRequired,
     spider: PropTypes.object.isRequired
   };
 
   getChildContext() {
     return {
+      options: this.props.options,
       spider: this.props.spider
     };
   }
@@ -58,12 +61,14 @@ class RightPanel extends Component {
 
 export default function app(spider, opts) {
 
-  const screen = render(<Application spider={spider} />, {
+  const screen = blessed.screen({
     autoPadding: true,
     fullUnicode: true,
     smartCSR: true,
     title: spider.name
   });
+
+  render(<Application spider={spider} options={opts} />, screen);
 
   // Will quit on ctrl + C
   screen.key(['C-c'], function(ch, key) {

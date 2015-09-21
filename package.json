@@ -32,10 +32,10 @@
   },
   "homepage": "https://github.com/medialab/sandcrawler-dashboard",
   "dependencies": {
-    "blessed": "^0.1.15",
+    "blessed": "^0.1.81",
     "lodash": "^3.1.0",
-    "react": "^0.14.0-beta1",
-    "react-blessed": "0.0.1",
+    "react": "^0.14.0-rc1",
+    "react-blessed": "^0.1.4",
     "sandcrawler-logger": "0.1.1"
   },
   "devDependencies": {
