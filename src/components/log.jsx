@@ -24,6 +24,8 @@ export default class Log extends Component {
   }
 
   componentDidMount() {
+
+    // Relying on the logger
     this.context.spider.use(logger(extend({
       out: txt => {
         const newLog = this.state.log
@@ -34,7 +36,12 @@ export default class Log extends Component {
 
         this.setState({log: newLog});
       }
-    }, this.context.options.logger)))
+    }, this.context.options.logger)));
+
+    // When the spider ends
+    this.context.spider.once('spider:teardown', () => {
+      this.context.spider.logger.info('Press Ctrl-c to exit...');
+    });
   }
 
   componentDidUpdate() {
