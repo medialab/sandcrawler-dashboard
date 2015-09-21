@@ -8,7 +8,7 @@ import React, {Component, PropTypes} from 'react';
 import chalk from 'chalk';
 import stylesheet from '../stylesheet';
 import {formatUrl} from '../helpers';
-import util from 'util';
+import {inspect} from 'util';
 import _ from 'lodash';
 
 function update(err, job, width) {
@@ -24,7 +24,7 @@ function update(err, job, width) {
   _(job.req)
     .omit(['url', 'retry', 'retryNow', 'retryLater'])
     .forIn(function(v, k) {
-      reqText += chalk.grey.bold(_.capitalize(k)) + ' ' + util.inspect(v, {depth: 1}) + '\n';
+      reqText += chalk.grey.bold(_.capitalize(k)) + ' ' + inspect(v, {depth: 1}) + '\n';
     })
     .value();
 
@@ -36,12 +36,12 @@ function update(err, job, width) {
   if (err)
     resText += chalk.red.bold('Error') + ' ' + (err.message || err) + '\n';
 
-  resText += chalk[err ? 'grey' : 'green'].bold('Data') + ' ' + util.inspect(job.res.data, {depth: 1}) + '\n';
+  resText += chalk[err ? 'grey' : 'green'].bold('Data') + ' ' + inspect(job.res.data, {depth: 1}) + '\n';
 
   _(job.res)
     .omit(['url', 'body', 'data', 'error'])
     .forIn(function(v, k) {
-      resText += chalk.grey.bold(_.capitalize(k)) + ' ' + util.inspect(v, {depth: 1}) + '\n';
+      resText += chalk.grey.bold(_.capitalize(k)) + ' ' + inspect(v, {depth: 1}) + '\n';
     })
     .value();
 
