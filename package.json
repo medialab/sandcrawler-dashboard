@@ -2,8 +2,9 @@
   "name": "sandcrawler-dashboard",
   "version": "0.1.1",
   "description": "A handy terminal dashboard plugin for sandcrawler.",
-  "main": "index.js",
+  "main": "./dist/api.js",
   "scripts": {
+    "build": "babel ./src --out-dir ./dist",
     "demo": "babel-node ./test/demo.js",
     "test": "babel-node ./test/test.js"
   },

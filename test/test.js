@@ -6,7 +6,7 @@
  */
 var express = require('express'),
     sandcrawler = require('sandcrawler'),
-    logger = require('../index.js'),
+    logger = require('../src/api.js'),
     _ = require('lodash');
 
 // Helpers
