@@ -30,6 +30,7 @@ var spider = sandcrawler.spider('MyFancySpider')
 ## Options
 
 * **logger** *?object*: Any options to pass to the `sandcrawler-logger` used by the dashboard internally. Possible options can be found [here](https://github.com/Yomguithereal/sandcrawler-logger#options).
+* **autoExit** *?bool*: Will wait for Ctrl+c after crawl is finished if falsey or unset, will exit with errorcode 1 otherwise.
 
 *Example*
 
