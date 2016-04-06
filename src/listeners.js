@@ -125,8 +125,12 @@ module.exports = function(spider, ui, opts) {
   spider.once('spider:teardown', function() {
     clearInterval(renderInterval);
     setTimeout(function() {
-      spider.logger.info('Press Ctrl-c to exit...');
-      render();
+      if (opts.autoExit) {
+        process.exit(1);
+      } else {
+        spider.logger.info('Press Ctrl-c to exit...');
+        render();
+      }
     }, 10);
   });
 
